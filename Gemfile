@@ -54,7 +54,7 @@ end
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem "factory_girl_rails"
 gem "turnout"
-gem "searchkick", '3.0.1'
+gem "searchkick", '3.0.0'
 
 gem 'capistrano', '~> 3.0'
 gem 'capistrano-maintenance', '~> 1.0', require: false
