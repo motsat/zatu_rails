@@ -57,7 +57,6 @@ jobs:
           command: |
             # add github of medpeer into known_hosts
             gem install specific_install --no-document
-            gem install compare_linker --no-document
             gem specific_install https://github.com/motsat/circleci-bundle-update-pr.git
             circleci-bundle-update-pr motsat konpeiex@gmail.com
       - deploy:
