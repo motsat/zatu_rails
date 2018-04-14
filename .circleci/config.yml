@@ -54,7 +54,12 @@ jobs:
           #                  $TEST_FILES
           #                        - run:
           name: Setup requirements for continuous bundle update
-          command: gem install -N circleci-bundle-update-pr && circleci-bundle-update-pr motsat konpeiex@gmail.com
+          command: |
+            # add github of medpeer into known_hosts
+            gem install specific_install --no-document
+            gem install compare_linker --no-document
+            gem specific_install https://github.com/motsat/circleci-bundle-update-pr.git
+            circleci-bundle-update-pr motsat konpeiex@gmail.com
       - deploy:
           name: Continuous bundle update2
           command: ls
