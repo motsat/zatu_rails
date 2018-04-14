@@ -54,11 +54,10 @@ jobs:
           #                  $TEST_FILES
           #                        - run:
           name: Setup requirements for continuous bundle update
-          command: gem install -N circleci-bundle-update-pr
-          name: Continuous bundle update
-          command: circleci-bundle-update-pr motsat konpeiex@gmail.com
+          command: gem install -N circleci-bundle-update-pr && circleci-bundle-update-pr motsat konpeiex@gmail.com
       - deploy:
-          #name: Continuous bundle update
+          name: Continuous bundle update2
+          command: ls
           #command: circleci-bundle-update-pr motsat konpeiex@gmail.com
 
       # collect reports
