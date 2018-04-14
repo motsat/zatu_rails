@@ -1,61 +1,46 @@
-# Ruby CircleCI 2.0 configuration file
-#
-# Check https://circleci.com/docs/2.0/language-ruby/ for more details
-#
 version: 2
 jobs:
   build:
+    # snip
+  continuous_bundle_update:
     docker:
-      # specify the version you desire here
-       - image: circleci/ruby:2.4.1-node-browsers
-      
-      # Specify service dependencies here if necessary
-      # CircleCI maintains a library of pre-built images
-      # documented at https://circleci.com/docs/2.0/circleci-images/
-      # - image: circleci/postgres:9.4
-
-    working_directory: ~/repo
-
+      - image: ruby:2.4.2-alpine
+    working_directory: /work
     steps:
+      - run:
+          name: Install System Dependencies
+          command: |
+            # See also https://circleci.com/docs/2.0/custom-images/#adding-required-and-custom-tools-or-files
+            apk add --update --no-cache git openssh-client tar gzip ca-certificates \
+              tzdata
+            gem install -N bundler
+      - run:
+          name: Set timezone to Asia/Tokyo
+          command: cp /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
       - checkout
-
-      # Download and cache dependencies
       - restore_cache:
+          name: Restore bundler cache
           keys:
-          - v1-dependencies-{{ checksum "Gemfile.lock" }}
-          # fallback to using the latest cache if no exact match is found
-          - v1-dependencies-
-
+            - gems-{{ .Environment.COMMON_CACHE_KEY }}-{{ checksum "Gemfile.lock" }}
+            - gems-{{ .Environment.COMMON_CACHE_KEY }}-
       - run:
-          name: install dependencies
-          command: |
-            bundle install --jobs=4 --retry=3 --path vendor/bundle
+          name: Setup requirements for continuous bundle update
+          command: gem install -N circleci-bundle-update-pr
+      - deploy:
+          name: Continuous bundle update
+          command: circleci-bundle-update-pr <username> <email>
 
-      - save_cache:
-          paths:
-            - ./vendor/bundle
-          key: v1-dependencies-{{ checksum "Gemfile.lock" }}
-        
-      # Database setup
-      - run: bundle exec rake db:create
-      - run: bundle exec rake db:schema:load
-
-      # run tests!
-      - run:
-          name: run tests
-          command: |
-            mkdir /tmp/test-results
-            TEST_FILES="$(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)"
-            
-            bundle exec rspec --format progress \
-                            --format RspecJunitFormatter \
-                            --out /tmp/test-results/rspec.xml \
-                            --format progress \
-                            $TEST_FILES
-
-      # collect reports
-      - store_test_results:
-          path: /tmp/test-results
-      - store_artifacts:
-          path: /tmp/test-results
-          destination: test-results
+workflows:
+  version: 2
+  build:
+    jobs:
+      - continuous_bundle_update
+  #nightly:
+  #  triggers:
+  #    - schedule:
+  #        cron: "00 10 * * 5"
+  #        filters:
+  #          branches:
+  #            only: master
+  #  jobs:
+      - continuous_bundle_update
