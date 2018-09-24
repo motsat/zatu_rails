@@ -134,7 +134,6 @@ GEM
     minitest (5.11.3)
     multi_json (1.13.1)
     multipart-post (2.0.0)
-    mysql2 (0.4.10)
     nap (1.1.0)
     net-scp (1.2.1)
       net-ssh (>= 2.6.5)
@@ -146,6 +145,7 @@ GEM
     octokit (4.9.0)
       sawyer (~> 0.8.0, >= 0.5.3)
     open4 (1.3.4)
+    pg (1.1.3)
     public_suffix (3.0.2)
     puma (3.11.4)
     rack (2.0.5)
@@ -252,7 +252,7 @@ DEPENDENCIES
   factory_girl_rails
   jbuilder (~> 2.5)
   listen (>= 3.0.5, < 3.2)
-  mysql2 (>= 0.3.18, < 0.5)
+  pg
   puma (~> 3.7)
   rails (~> 5.1.3)
   sass-rails (~> 5.0)
@@ -266,4 +266,4 @@ DEPENDENCIES
   web-console (>= 3.3.0)
 
 BUNDLED WITH
-   1.15.4
+   1.16.5
